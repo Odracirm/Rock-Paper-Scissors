@@ -9,37 +9,77 @@ class GameAction(IntEnum):
     Scissors = 2
 
 
+class GameStats:
+    def __init__(self, use_Rock, use_Paper, use_Scissors, round):
+        self.rocks_use = use_Rock
+        self.paper_use = use_Paper
+        self.scissors_use = use_Scissors
+        self.round = round
+
+stater = GameStats(0,0,0,0)
+
 def assess_game(user_action, computer_action):
     if user_action == computer_action:
         print(f"User and computer picked {user_action.name}. Draw game!")
 
     # You picked Rock
     elif user_action == GameAction.Rock:
+        stater.rocks_use += 1 
         if computer_action == GameAction.Scissors:
             print("Rock smashes scissors. You won!")
         else:
             print("Paper covers rock. You lost!")
-
+        
     # You picked Paper
     elif user_action == GameAction.Paper:
+        stater.paper_use += 1 
         if computer_action == GameAction.Rock:
             print("Paper covers rock. You won!")
         else:
             print("Scissors cuts paper. You lost!")
-
+        
     # You picked Scissors
     elif user_action == GameAction.Scissors:
+        stater.scissors_use += 1 
         if computer_action == GameAction.Rock:
             print("Rock smashes scissors. You lost!")
         else:
             print("Scissors cuts paper. You won!")
-
+        
+    stater.round += 1 
 
 def get_computer_action():
+    
     computer_selection = random.randint(0, len(GameAction) - 1)
     computer_action = GameAction(computer_selection)
     print(f"Computer picked {computer_action.name}.")
-
+    for stater.round in range((stater.round % 5 == 0) + 1, stater.round % 5 == 0):
+    #if stater.round >= 5:   
+        #if stater.round % 5 == 0:
+            if stater.rocks_use > stater.paper_use:
+                if stater.rocks_use > stater.scissors_use or stater.paper_use == stater.scissors_use:
+                    computer_action = GameAction.Paper
+            elif stater.paper_use > stater.rocks_use:
+                if stater.paper_use > stater.scissors_use or stater.rocks_use == stater.scissors_use:
+                    computer_action = GameAction.Scissors
+            elif stater.scissors_use > stater.rocks_use:
+                if stater.scissors_use > stater.paper_use or stater.rocks_use == stater.paper_use:
+                    computer_action = GameAction.Rock
+            elif stater.rocks_use == stater.paper_use:
+                if stater.scissors_use == 1:
+                    computer_action = GameAction(computer_selection)
+                    while computer_selection == GameAction.Scissors:
+                        computer_action = GameAction(computer_selection)
+            elif stater.paper_use == stater.scissors_use:
+                if stater.rocks_use == 1:
+                    computer_action = GameAction(computer_selection)
+                    while computer_selection == GameAction.Rock:
+                        computer_action = GameAction(computer_selection)
+            elif stater.scissors_use == stater.rocks_use:
+                if stater.paper_use == 1:
+                    computer_action = GameAction(computer_selection)
+                    while computer_selection == GameAction.Paper:
+                        computer_action = GameAction(computer_selection)
     return computer_action
 
 
@@ -74,6 +114,4 @@ def main():
         if not play_another_round():
             break
 
-
-if __name__ == "__main__":
-    main()
+main()
